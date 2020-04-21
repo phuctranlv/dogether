@@ -19,24 +19,6 @@ const { width, height } = Dimensions.get('window');
 const defaultHeight = height * 0.67;
 
 export default class TaskModal extends Component {
-
-  // static propTypes = {
-	// isOpen: PropTypes.bool.isRequired,
-  //   // Movie object that has title, genre, poster, days and times
-  //   movie: PropTypes.object,
-  //   // Index of chosen day
-  //   chosenDay: PropTypes.number,
-  //   // Index of chosem show time
-  //   chosenTime: PropTypes.number,
-  //   // Gets called when user chooses day
-  //   onChooseDay: PropTypes.func,
-  //   // Gets called when user chooses time
-  //   onChooseTime: PropTypes.func,
-  //   // Gets called when user books their ticket
-  //   onBook: PropTypes.func,
-  //   // Gets called when popup closed
-  //   onClose: PropTypes.func,
-  // }
   constructor(props) {
     super(props);
     this.state = {

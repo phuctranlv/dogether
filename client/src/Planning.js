@@ -33,7 +33,7 @@ class PlanningScreen extends Component {
     })
   }
 
-  openTask(movie) {
+  openTask(task) {
     this.setState({
       popupIsOpen: true,
       task,	
@@ -62,7 +62,7 @@ class PlanningScreen extends Component {
             title="Add a task"
             onPress={() => this.props.navigation.navigate('Social')}
           />
-          {/* <ScrollView
+          <ScrollView
             contentContainerStyle={styles.scrollContent}
             // Hide all scroll indicators
             showsHorizontalScrollIndicator={false}
@@ -73,12 +73,12 @@ class PlanningScreen extends Component {
               onOpen={this.openTask}
               key={index}
             />)}
-          </ScrollView> */}
-          {/* <TaskModal
+          </ScrollView>
+          <TaskModal
             movie={this.state.movie}
             isOpen={this.state.popupIsOpen}
             onClose={this.closeTask}
-          /> */}
+          />
         </View>
       );
     }
