@@ -28,14 +28,12 @@ export default class TaskModal extends Component {
       opacity: new Animated.Value(0),
       // Popup height that can be changed by pulling it up or down
       height: defaultHeight,
-      // Expanded mode with bigger poster flag
+      // Expanded mode with bigger picture flag
       expanded: false,
       // Visibility flag
       visible: this.props.isOpen,
     };
-
   }
-
 
   // When user starts pulling popup previous height gets stored here
   // to help us calculate new height value during and after pulling
@@ -176,10 +174,10 @@ export default class TaskModal extends Component {
         marginRight: 10,
       },
       movieContainer: this.state.expanded ? {
-        flexDirection: 'column',  // arrange image and movie info in a column
+        flexDirection: 'column',  // arrange image and task info in a column
         alignItems: 'center',     // and center them
       } : {
-        flexDirection: 'row',     // arrange image and movie info in a row
+        flexDirection: 'row',     // arrange image and task info in a row
       },
       movieInfo: this.state.expanded ? {
         flex: 0,
@@ -197,15 +195,15 @@ export default class TaskModal extends Component {
 
   render() {
     const {
-      movie,
+      task,
       chosenDay,
       chosenTime,
       onChooseDay,
       onChooseTime,
       onBook
     } = this.props;
-    // Pull out movie data
-    const { title, genre, poster, days, times } = movie || {};
+    // Pull out task data
+    const { title, note, picture, days, times } = task || {};
     // Render nothing if not visible
     if (!this.state.visible) {
       return null;
@@ -227,19 +225,19 @@ export default class TaskModal extends Component {
 
           {/* Content */}
           <View style={styles.content}>
-            {/* Movie poster, title and genre */}
+            {/* Movie picture, title and note */}
             <View
               style={[styles.movieContainer, this.getStyles().movieContainer]}
               {...this._panResponder.panHandlers}
             >
               {/* Poster */}
               <View style={[styles.imageContainer, this.getStyles().imageContainer]}>
-                <Image source={{ uri: poster }} style={styles.image} />
+                <Image source={{ uri: picture }} style={styles.image} />
               </View>
-              {/* Title and genre */}
+              {/* Title and note */}
               <View style={[styles.movieInfo, this.getStyles().movieInfo]}>
                 <Text style={[styles.title, this.getStyles().title]}>{title}</Text>
-                <Text style={styles.genre}>{genre}</Text>
+                <Text style={styles.note}>{note}</Text>
               </View>
             </View>
 

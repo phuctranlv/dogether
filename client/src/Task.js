@@ -22,14 +22,13 @@ class Task extends Component {
     }
   }
   render() {
-    const { task: { task, note, current, share }, onOpen } = this.props;
-    console.log('================================================================task in Task.js is:', note)
+    const { task, task: { title, picture, note, current, share }, onOpen } = this.props;
     return (
       <TouchableOpacity style={styles.container} onPress={() => onOpen(task)}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: 'https://s3.amazonaws.com/uifaces/faces/twitter/j04ntoh/128.jpg', share }} style={styles.image} />
+          <Image source={{ uri: picture, share }} style={styles.image} />
         </View>
-        <Text style={styles.task} numberOfLines={1}>{task}</Text>
+        <Text style={styles.title} numberOfLines={1}>{title}</Text>
         <Text style={styles.note} numberOfLines={1}>{note}</Text>
         
       </TouchableOpacity>
@@ -51,7 +50,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,                 // rounded corners
     ...StyleSheet.absoluteFillObject, // fill up all space in a container
   },
-  task: {
+  title: {
     ...defaultStyles.text,
     fontSize: 14,
     marginTop: 4,

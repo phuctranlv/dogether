@@ -3,8 +3,8 @@ const faker = require('faker');
 const fs = require('fs');
 
 // users table:
-const usersNumberOfPrimaryRecords = 10000; // users are primary
-const usersMaxNumberOfSecondaryRecords = 100; // a user could have up to 100 friends (secondary)
+const usersNumberOfPrimaryRecords = 1000; // users are primary
+const usersMaxNumberOfSecondaryRecords = 10; // a user could have up to 100 friends (secondary)
 const usersTable = {
   userId: [],
   userName: [],
@@ -17,7 +17,8 @@ const usersTable = {
 const tasksNumberOfPrimaryRecords = 100000; // users are primary
 const tasksTable = {
   taskId: [],
-  task: [],
+  picture: [],
+  title: [],
   note: [],
   current: [],
   share: [],
@@ -26,8 +27,8 @@ const tasksTable = {
 };
 
 // conversations table:
-const convoNumberOfPrimaryRecords = 10000;
-const convoNumberOfSecondaryRecords = 100; // a conversation could have up to 100 messages
+const convoNumberOfPrimaryRecords = 1000;
+const convoNumberOfSecondaryRecords = 10; // a conversation could have up to 100 messages
 const conversations = {
   userId1: [],
   userName1: [],
@@ -70,7 +71,8 @@ for (let i = 0; i < usersNumberOfPrimaryRecords; i += 1) {
 // create tasks and similar tasks data:
 for (let i = 0; i < tasksNumberOfPrimaryRecords; i += 1) {
   tasksTable.taskId.push(faker.random.uuid());
-  tasksTable.task.push(faker.random.word('string').replace(',', ''));
+  tasksTable.picture.push(faker.image.avatar());
+  tasksTable.title.push(faker.random.word('string').replace(',', ''));
   tasksTable.note.push(faker.lorem.sentence(10));
   tasksTable.current.push(faker.random.boolean());
   tasksTable.share.push(faker.random.boolean());
@@ -181,7 +183,7 @@ function writeAlotTasks(writer, callback) {
     do {
       i -= 1;
       id += 1;
-      const data = `${tasksTable.taskId[id]},${tasksTable.task[id]},${tasksTable.note[id]},${tasksTable.current[id]},${tasksTable.share[id]},${tasksTable.userId[id]},${tasksTable.userName[id]}\n`;
+      const data = `${tasksTable.taskId[id]},${tasksTable.picture[id]},${tasksTable.title[id]},${tasksTable.note[id]},${tasksTable.current[id]},${tasksTable.share[id]},${tasksTable.userId[id]},${tasksTable.userName[id]}\n`;
       if (i === 0) {
         writer.write(data, callback);
       } else {

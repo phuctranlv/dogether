@@ -22,21 +22,19 @@ class PlanningScreen extends Component {
   componentDidMount() {
     axios.get('http:localhost:3000/plans/tasks', {
       params: {
-        userId: '4151b956-e9c5-4641-8a3f-843cd875d8c5'
+        userId: '1413dd05-5619-4b79-8773-51effc1d82d5'
       }
     }).then((result) => {
-      console.log(result);
       this.setState({
         tasks: result.data
       })
-      // console.log(this.state.tasks)
     })
   }
 
   openTask(task) {
     this.setState({
       popupIsOpen: true,
-      task,	
+      task: task
     });
   }
 
@@ -47,7 +45,6 @@ class PlanningScreen extends Component {
   }
 
   render() {
-    console.log('======================================this.state.tasks:', this.state.tasks);
     if (this.state.tasks === undefined) {
       console.log('hello world!')
       return (<></>)
@@ -68,14 +65,18 @@ class PlanningScreen extends Component {
             showsHorizontalScrollIndicator={false}
             showsVerticalScrollIndicator={false}
           >
-            {this.state.tasks.map((task, index) => <Task
-              task={task}
-              onOpen={this.openTask}
-              key={index}
-            />)}
+            {this.state.tasks.map((task, index) => {
+              return (
+                <Task
+                  task={task}
+                  onOpen={this.openTask}
+                  key={index}
+                />
+              )
+            })}
           </ScrollView>
           <TaskModal
-            movie={this.state.movie}
+            task={this.state.task}
             isOpen={this.state.popupIsOpen}
             onClose={this.closeTask}
           />

@@ -16,7 +16,8 @@ CREATE TABLE users (
 
 CREATE TABLE tasks (
   taskid UUID,
-  task VARCHAR,
+  picture VARCHAR,
+  title VARCHAR,
   note VARCHAR,
   current BOOLEAN,
   share BOOLEAN,
@@ -27,13 +28,14 @@ CREATE TABLE tasks (
 
 CREATE TABLE similartasks (
   taskid UUID,
-  task VARCHAR,
+  picture VARCHAR,
+  title VARCHAR,
   note VARCHAR,
   current BOOLEAN,
   share BOOLEAN,
   userid UUID,
   username VARCHAR,
-  PRIMARY KEY (task, share, current, taskid)
+  PRIMARY KEY (title, share, current, taskid)
 );
 
 CREATE TABLE conversations (
