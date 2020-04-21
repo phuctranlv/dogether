@@ -5,6 +5,7 @@ import { ScrollView, Text, View, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import Task from './Task';
 import TaskModal from './TaskModal';
+import CollaborationRequestScreen from './CollaborationRequest';
 
 class PlanningScreen extends Component {
   constructor(props) {
@@ -18,6 +19,7 @@ class PlanningScreen extends Component {
     this.closeTask = this.closeTask.bind(this);
     this.chooseCurrent = this.chooseCurrent.bind(this);
     this.chooseShare = this.chooseShare.bind(this);
+    this.sendCollaborationRequest = this.sendCollaborationRequest.bind(this);
   }
 
   componentDidMount() {
@@ -59,6 +61,13 @@ class PlanningScreen extends Component {
     });
   }
 
+  sendCollaborationRequest() {
+    // Close popup
+    this.closeTask();
+    // Navigate away to Confirmation route
+    this.props.navigation.navigate('Collaboration Request')
+  }
+
   render() {
     if (this.state.tasks === undefined) {
       console.log('hello world!')
@@ -98,6 +107,7 @@ class PlanningScreen extends Component {
             chosenShare={this.state.chosenShare}
             onChooseCurrent={this.chooseCurrent}
             onChooseShare={this.chooseShare}
+            onClickingSendCollaborationRequest={this.sendCollaborationRequest}
           />
         </View>
       );

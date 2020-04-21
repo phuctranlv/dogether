@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import defaultStyles from './styles';
 import Options from './Options';
+import CollaborationRequestScreen from './CollaborationRequest';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
@@ -199,7 +200,7 @@ export default class TaskModal extends Component {
       task,
       onChooseCurrent,
       onChooseShare,
-      onBook
+      onClickingSendCollaborationRequest
     } = this.props;
     // Pull out task data
     const { title, note, picture, current, share } = task || {};
@@ -269,9 +270,30 @@ export default class TaskModal extends Component {
             <TouchableHighlight
               underlayColor="#9575CD"
               style={styles.buttonContainer}
-              onPress={onBook}
+              onPress={() => {
+                if (chosenCurrent !== 0 && chosenShare !== 0) {
+                  alert('Current status and share status are required for collaboration');
+                } else {
+                  onClickingSendCollaborationRequest();
+                }
+              }}
             >
-              <Text style={styles.button}>Book My Tickets</Text>
+              <Text style={styles.button}>Send collaboration request</Text>
+            </TouchableHighlight>
+          </View>
+          <View style={styles.footer}>
+            <TouchableHighlight
+              underlayColor="#9575CD"
+              style={styles.buttonContainer}
+              onPress={() => {
+                if (chosenCurrent !== 0 && chosenShare !== 0) {
+                  alert('Current status and share status are required for collaboration');
+                } else {
+                  onClickingSendCollaborationRequest();
+                }
+              }}
+            >
+              <Text style={styles.button}>Send collaboration request</Text>
             </TouchableHighlight>
           </View>
 
