@@ -26,10 +26,12 @@ class Task extends Component {
     return (
       <TouchableOpacity style={styles.container} onPress={() => onOpen(task)}>
         <View style={styles.imageContainer}>
-          <Image source={{ uri: picture, share }} style={styles.image} />
+          <Image source={{ uri: picture }} style={styles.image} />
         </View>
-        <Text style={styles.title} numberOfLines={1}>{title}</Text>
-        <Text style={styles.note} numberOfLines={1}>{note}</Text>
+        <Text style={styles.title} numberOfLines={1}>Task: {title}</Text>
+        <Text numberOfLines={1}>Note: {note}</Text>
+        <Text>Current: {`${current}`}</Text>
+        <Text>Sharing: {`${share}`}</Text>
         
       </TouchableOpacity>
     );

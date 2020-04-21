@@ -236,19 +236,19 @@ export default class TaskModal extends Component {
               </View>
               {/* Title and note */}
               <View style={[styles.movieInfo, this.getStyles().movieInfo]}>
-                <Text style={[styles.title, this.getStyles().title]}>{title}</Text>
-                <Text style={styles.note}>{note}</Text>
+                <Text style={[styles.title, this.getStyles().title]}>Task: {title}</Text>
+                <Text style={styles.note}>Note: {note}</Text>
               </View>
             </View>
 
             {/* Showtimes */}
             <View>
               {/* Day */}
-              <Text style={styles.sectionHeader}>Day</Text>
+              <Text style={styles.sectionHeader}>Task setting:</Text>
               {/* TODO: Add day options here */}
               <Text>Add day options here</Text>
               {/* Time */}
-              <Text style={styles.sectionHeader}>Showtime</Text>
+              <Text style={styles.sectionHeader}>Dogether:</Text>
               {/* TODO: Add show time options here */}
               <Text>Add show time options here</Text>
             </View>

@@ -3,7 +3,6 @@
 import React, { Component } from 'react';
 import { ScrollView, Text, View, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
-import movies from './data';
 import Task from './Task';
 import TaskModal from './TaskModal';
 
