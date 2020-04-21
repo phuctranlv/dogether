@@ -12,6 +12,7 @@ import {
   View
 } from 'react-native';
 import defaultStyles from './styles';
+import Options from './Options';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
@@ -154,7 +155,7 @@ export default class TaskModal extends Component {
       ),
       // Slide down
       Animated.timing(
-        this.state.position, { toValue: height , useNativeDriver: true} // bottom of the screen
+        this.state.position, { toValue: height, useNativeDriver: true } // bottom of the screen
       ),
     ]).start(() => this.setState({
       // Reset to default values
@@ -170,23 +171,23 @@ export default class TaskModal extends Component {
       imageContainer: this.state.expanded ? {
         width: width / 2,         // half of screen widtj
       } : {
-        maxWidth: 110,            // limit width
-        marginRight: 10,
-      },
+          maxWidth: 110,            // limit width
+          marginRight: 10,
+        },
       movieContainer: this.state.expanded ? {
         flexDirection: 'column',  // arrange image and task info in a column
         alignItems: 'center',     // and center them
       } : {
-        flexDirection: 'row',     // arrange image and task info in a row
-      },
+          flexDirection: 'row',     // arrange image and task info in a row
+        },
       movieInfo: this.state.expanded ? {
         flex: 0,
         alignItems: 'center',     // center horizontally
         paddingTop: 20,
       } : {
-        flex: 1,
-        justifyContent: 'center', // center vertically
-      },
+          flex: 1,
+          justifyContent: 'center', // center vertically
+        },
       title: this.state.expanded ? {
         textAlign: 'center',
       } : {},
@@ -196,14 +197,14 @@ export default class TaskModal extends Component {
   render() {
     const {
       task,
-      chosenDay,
-      chosenTime,
-      onChooseDay,
-      onChooseTime,
+      onChooseCurrent,
+      onChooseShare,
       onBook
     } = this.props;
     // Pull out task data
-    const { title, note, picture, days, times } = task || {};
+    const { title, note, picture, current, share } = task || {};
+    const chosenCurrent = current === true ? 0 : null;
+    const chosenShare = share === true ? 0 : null;
     // Render nothing if not visible
     if (!this.state.visible) {
       return null;
@@ -212,7 +213,7 @@ export default class TaskModal extends Component {
       <View style={styles.container}>
         {/* Closes popup if user taps on semi-transparent backdrop */}
         <TouchableWithoutFeedback onPress={this.props.onClose}>
-          <Animated.View style={[styles.backdrop, { opacity: this.state.opacity }]}/>
+          <Animated.View style={[styles.backdrop, { opacity: this.state.opacity }]} />
         </TouchableWithoutFeedback>
         <Animated.View
           style={[styles.modal, {
@@ -244,13 +245,21 @@ export default class TaskModal extends Component {
             {/* Showtimes */}
             <View>
               {/* Day */}
-              <Text style={styles.sectionHeader}>Task setting:</Text>
+              <Text style={styles.sectionHeader}>Set current status</Text>
               {/* TODO: Add day options here */}
-              <Text>Add day options here</Text>
+              <Options
+                values={`current`}
+                chosen={chosenCurrent}
+                onChoose={onChooseCurrent}
+              />
               {/* Time */}
-              <Text style={styles.sectionHeader}>Dogether:</Text>
+              <Text style={styles.sectionHeader}>Set share status</Text>
               {/* TODO: Add show time options here */}
-              <Text>Add show time options here</Text>
+              <Options
+                values={`share`}
+                chosen={chosenShare}
+                onChoose={onChooseShare}
+              />
             </View>
 
           </View>

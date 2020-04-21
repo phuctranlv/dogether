@@ -16,6 +16,8 @@ class PlanningScreen extends Component {
     };
     this.openTask = this.openTask.bind(this);
     this.closeTask = this.closeTask.bind(this);
+    this.chooseCurrent = this.chooseCurrent.bind(this);
+    this.chooseShare = this.chooseShare.bind(this);
   }
 
   componentDidMount() {
@@ -40,6 +42,20 @@ class PlanningScreen extends Component {
   closeTask() {
     this.setState({
       popupIsOpen: false,
+      chosenCurrent: 0,
+      chosenShare: null
+    });
+  }
+
+  chooseCurrent(current) {
+    this.setState({
+      chosenCurrent: current,
+    });
+  }
+
+  chooseShare(share) {
+    this.setState({
+      chosenShare: share,
     });
   }
 
@@ -78,6 +94,10 @@ class PlanningScreen extends Component {
             task={this.state.task}
             isOpen={this.state.popupIsOpen}
             onClose={this.closeTask}
+            chosenCurrent={this.state.chosenCurrent}
+            chosenShare={this.state.chosenShare}
+            onChooseCurrent={this.chooseCurrent}
+            onChooseShare={this.chooseShare}
           />
         </View>
       );
