@@ -271,7 +271,7 @@ export default class TaskModal extends Component {
               underlayColor="#9575CD"
               style={styles.buttonContainer}
               onPress={() => {
-                if (chosenCurrent !== 0 && chosenShare !== 0) {
+                if (chosenCurrent !== 0 | chosenShare !== 0) {
                   alert('Current status and share status are required for collaboration');
                 } else {
                   onClickingSendCollaborationRequest();
@@ -286,7 +286,7 @@ export default class TaskModal extends Component {
               underlayColor="#9575CD"
               style={styles.buttonContainer}
               onPress={() => {
-                if (chosenCurrent !== 0 && chosenShare !== 0) {
+                if (chosenCurrent !== 0 | chosenShare !== 0) {
                   alert('Current status and share status are required for collaboration');
                 } else {
                   onClickingSendCollaborationRequest();

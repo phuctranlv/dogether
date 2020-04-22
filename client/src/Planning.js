@@ -25,7 +25,7 @@ class PlanningScreen extends Component {
   componentDidMount() {
     axios.get('http:localhost:3000/plans/tasks', {
       params: {
-        userId: '1413dd05-5619-4b79-8773-51effc1d82d5'
+        userId: '68018ace-810f-4285-8c8e-138ab6ff02dd'
       }
     }).then((result) => {
       this.setState({
@@ -76,7 +76,7 @@ class PlanningScreen extends Component {
       return (
         <View style={styles.container}>
           <Button
-            title="Go to Social"
+            title="Do! Dogether!"
             onPress={() => this.props.navigation.navigate('Social')}
           />
           <Button

@@ -16,14 +16,14 @@ export default class CollaborationRequestScreen extends Component {
     const { code } = this.props;
     return (
       <View style={styles.container}>
-        <Text style={styles.header}>Your confirmation code</Text>
+        <Text style={styles.header}>Your request has been sent. Happy dogether!</Text>
         <Text style={styles.code}>{code}</Text>
         <TouchableOpacity
           style={styles.buttonContainer}
           // Go back when pressed
-          onPress={() => this.props.navigator.pop() }
+          onPress={() => alert('Collaboration request is sent') }
         >
-          <Text style={styles.button}>Done</Text>
+          <Text style={styles.button}>Woohoo!</Text>
         </TouchableOpacity>
       </View>
     );

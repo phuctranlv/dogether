@@ -12,7 +12,7 @@ import defaultStyles from './styles';
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 // How many posters we want to have in each row and column
-const cols = 3, rows = 3;
+const cols = 3, rows = 4;
 
 class Task extends Component {
   constructor(props) {
@@ -31,7 +31,7 @@ class Task extends Component {
         <Text style={styles.title} numberOfLines={1}>Task: {title}</Text>
         <Text numberOfLines={1}>Note: {note}</Text>
         <Text>Current: {`${current}`}</Text>
-        <Text>Sharing: {`${share}`}</Text>
+        <Text>Share: {`${share}`}</Text>
         
       </TouchableOpacity>
     );
