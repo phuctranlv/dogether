@@ -11,6 +11,7 @@ CREATE TABLE users (
   avatar VARCHAR,
   frienduserid UUID,
   friendusername VARCHAR,
+  friendavatar VARCHAR,
   PRIMARY KEY (userid, username, frienduserid)
 );
 

@@ -1,6 +1,7 @@
 /* eslint-disable comma-dangle */
 const faker = require('faker');
 const fs = require('fs');
+const pictureUrl = 'https://soundiverse.s3-us-west-1.amazonaws.com/';
 
 // users table:
 const usersNumberOfPrimaryRecords = 1000; // users are primary
@@ -10,7 +11,8 @@ const usersTable = {
   userName: [],
   avatar: [],
   friendUserId: [],
-  friendUserName: []
+  friendUserName: [],
+  friendAvatar: []
 };
 
 // tasks table:
@@ -48,10 +50,12 @@ for (let i = 0; i < usersNumberOfPrimaryRecords; i += 1) {
 for (let i = 0; i < usersNumberOfPrimaryRecords; i += 1) {
   const friendUserIdArray = [];
   const friendUserNameArray = [];
+  const friendAvatarArray = [];
   const numberOfFriends = faker.random.number(usersMaxNumberOfSecondaryRecords);
   if (numberOfFriends === 0) {
     usersTable.friendUserId.push(friendUserIdArray);
     usersTable.friendUserName.push(friendUserNameArray);
+    usersTable.friendAvatar.push(friendAvatarArray);
   } else {
     for (let j = 0; j < numberOfFriends; j += 1) {
       let friendId = faker.random.number(usersNumberOfPrimaryRecords);
@@ -59,19 +63,22 @@ for (let i = 0; i < usersNumberOfPrimaryRecords; i += 1) {
         friendId -= 1;
       }
       const friendUserId = usersTable.userId[friendId];
-      const friendUserName = usersTable.userName[friendId];
+      const friendUserName = usersTable.userName[friendId]
+      const friendAvatar = usersTable.avatar[friendId];
       friendUserIdArray.push(friendUserId);
       friendUserNameArray.push(friendUserName);
+      friendAvatarArray.push(friendAvatar);
     }
   }
   usersTable.friendUserId.push(friendUserIdArray);
   usersTable.friendUserName.push(friendUserNameArray);
+  usersTable.friendAvatar.push(friendAvatarArray);
 }
 
 // create tasks and similar tasks data:
 for (let i = 0; i < tasksNumberOfPrimaryRecords; i += 1) {
   tasksTable.taskId.push(faker.random.uuid());
-  tasksTable.picture.push(faker.image.avatar());
+  tasksTable.picture.push(pictureUrl + (faker.random.number(8) + 1) + '.jpeg');
   tasksTable.title.push(faker.random.word('string').replace(',', ''));
   tasksTable.note.push(faker.lorem.sentence(10));
   tasksTable.current.push(faker.random.boolean());
@@ -139,7 +146,7 @@ function writeAlotUsers(writer, callback) {
       id += 1;
       let data;
       if (usersTable.friendUserId[id][0] === undefined) {
-        data = `${usersTable.userId[id]},${usersTable.userName[id]},${usersTable.avatar[id]},${usersTable.userId[id]},${usersTable.userName[id]}\n`;
+        data = `${usersTable.userId[id]},${usersTable.userName[id]},${usersTable.avatar[id]},${usersTable.userId[id]},${usersTable.userName[id]},${usersTable.avatar[id]}\n`;
         if (i === 0) {
           writer.write(data, callback);
         } else {
@@ -149,7 +156,7 @@ function writeAlotUsers(writer, callback) {
         }
       } else {
         for (let j = 0; j < usersTable.friendUserId[id].length; j += 1) {
-          data = `${usersTable.userId[id]},${usersTable.userName[id]},${usersTable.avatar[id]},${usersTable.friendUserId[id][j]},${usersTable.friendUserName[id][j]}\n`;
+          data = `${usersTable.userId[id]},${usersTable.userName[id]},${usersTable.avatar[id]},${usersTable.friendUserId[id][j]},${usersTable.friendUserName[id][j]},${usersTable.friendAvatar[id][j]}\n`;
           if (i === 0) {
             writer.write(data, callback);
           } else {

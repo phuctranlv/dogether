@@ -1,6 +1,6 @@
 USE journeytothewest;
 
-COPY users (userid, username, avatar, frienduserid, friendusername) FROM 'usersData.txt';
+COPY users (userid, username, avatar, frienduserid, friendusername, friendavatar) FROM 'usersData.txt';
 
 COPY tasks (taskid, picture, title, note, current, share, userid, username) FROM 'tasksData.txt';
 
