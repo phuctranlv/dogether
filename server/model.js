@@ -14,7 +14,7 @@ model.users.getUsersData = (req, cb) => {
   const params = [req.query.userId];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log(JSON.parse(JSON.stringify(result.rows)));
+      // console.log(JSON.parse(JSON.stringify(result.rows)));
       cb(null, JSON.parse(JSON.stringify(result.rows)));
     })
     .catch((error) => {
@@ -28,7 +28,7 @@ model.conversations.getConversations = (req, cb) => {
   const params = [req.query.userId1, req.query.userId2];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log(JSON.parse(JSON.stringify(result.rows)));
+      // console.log(JSON.parse(JSON.stringify(result.rows)));
       cb(null, JSON.parse(JSON.stringify(result.rows)));
     })
     .catch((error) => {
@@ -53,7 +53,7 @@ model.conversations.postConversations = (req, cb) => {
   ];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log('success', result.rows);
+      // console.log('success', result.rows);
       cb(null, result.rows);
     })
     .catch((error) => {
@@ -67,7 +67,7 @@ model.tasks.getTasks = (req, cb) => {
   const params = [req.query.userId];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log(JSON.parse(JSON.stringify(result.rows)));
+      // console.log(JSON.parse(JSON.stringify(result.rows)));
       cb(null, JSON.parse(JSON.stringify(result.rows)));
     })
     .catch((error) => {
@@ -90,7 +90,7 @@ model.tasks.postTask = (req, cb) => {
   ];
   client.execute(queryForTasks, params, { prepare: true })
     .then((result) => {
-      console.log('success', result.rows);
+      // console.log('success', result.rows);
       cb(null, result.rows);
     })
     .catch((error) => {
@@ -99,7 +99,7 @@ model.tasks.postTask = (req, cb) => {
     }).then(() => {
       client.execute(queryForSimilarTasks, params, { prepare: true })
         .then((result) => {
-          console.log('success', result.rows);
+          // console.log('success', result.rows);
         })
         .catch((error) => {
           console.log(error);
@@ -125,7 +125,7 @@ model.tasks.updateTask = (req, cb) => {
   ];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log('success', result.rows);
+      // console.log('success', result.rows);
       cb(null, result.rows);
     })
     .catch((error) => {
@@ -139,7 +139,7 @@ model.tasks.deleteTask = (req, cb) => {
   const params = [req.query.userId, req.query.taskId];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log(result.rows);
+      // console.log(result.rows);
       cb(null, result.rows);
     })
     .catch((error) => {
@@ -153,7 +153,7 @@ model.similarTasks.getPeopleWithSimilarTasks = (req, cb) => {
   const params = [req.query.task];
   client.execute(query, params, { prepare: true })
     .then((result) => {
-      console.log(JSON.parse(JSON.stringify(result.rows)));
+      // console.log(JSON.parse(JSON.stringify(result.rows)));
       cb(null, JSON.parse(JSON.stringify(result.rows)));
     })
     .catch((error) => {

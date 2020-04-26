@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -54,7 +54,7 @@ export default class Options extends Component {
   }
 
   render() {
-    const { value, isChosen, onChoose } = this.props;
+    const { value, isChosen } = this.props;
     const backgroundColorAnimation = this.state.background.interpolate({
       inputRange: [0, 100],
       outputRange: [colorDefault, colorSelected],
@@ -62,7 +62,6 @@ export default class Options extends Component {
     return (
       <TouchableOpacity
         activeOpacity={1}
-        onPress={onChoose}
       >
         <Animated.View
           style={[styles.container, { backgroundColor: backgroundColorAnimation }]}

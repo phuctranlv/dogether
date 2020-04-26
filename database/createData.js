@@ -29,7 +29,7 @@ const tasksTable = {
 };
 
 // conversations table:
-const convoNumberOfPrimaryRecords = 1000;
+const convoNumberOfPrimaryRecords = 1000000;
 const convoNumberOfSecondaryRecords = 10; // a conversation could have up to 100 messages
 const conversations = {
   userId1: [],

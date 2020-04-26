@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   Animated,
   Dimensions,
@@ -9,11 +9,11 @@ import {
   Text,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  View
+  View,
+  Modal
 } from 'react-native';
 import defaultStyles from './styles';
 import Options from './Options';
-import CollaborationRequestScreen from './CollaborationRequest';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
@@ -34,6 +34,7 @@ export default class TaskModal extends Component {
       expanded: false,
       // Visibility flag
       visible: this.props.isOpen,
+      modalVisible: false
     };
   }
 
@@ -198,8 +199,6 @@ export default class TaskModal extends Component {
   render() {
     const {
       task,
-      onChooseCurrent,
-      onChooseShare,
       onClickingSendCollaborationRequest
     } = this.props;
     // Pull out task data
@@ -251,7 +250,6 @@ export default class TaskModal extends Component {
               <Options
                 values={`current`}
                 chosen={chosenCurrent}
-                onChoose={onChooseCurrent}
               />
               {/* Time */}
               <Text style={styles.sectionHeader}>Set share status</Text>
@@ -259,7 +257,6 @@ export default class TaskModal extends Component {
               <Options
                 values={`share`}
                 chosen={chosenShare}
-                onChoose={onChooseShare}
               />
             </View>
 
@@ -274,12 +271,45 @@ export default class TaskModal extends Component {
                 if (chosenCurrent !== 0 | chosenShare !== 0) {
                   alert('Current status and share status are required for collaboration');
                 } else {
-                  onClickingSendCollaborationRequest();
+                  this.setState({ modalVisible: !this.state.modalVisible });
                 }
               }}
             >
               <Text style={styles.button}>Send collaboration request</Text>
             </TouchableHighlight>
+
+
+            <View style={styles.centeredView}>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={this.state.modalVisible}
+                onRequestClose={() => {
+                  Alert.alert("Modal has been closed.");
+                }}
+              >
+                <View style={styles.centeredView}>
+                  <View style={styles.modalView}>
+                    <View>
+                      <Text style={styles.modalText}>Your request has been sent. Happy dogether!</Text>
+                    </View>
+
+                    <TouchableHighlight
+                      style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                      onPress={() => {
+                        this.setState({ modalVisible: !this.state.modalVisible });
+                      }}
+                    >
+                      <Text style={styles.textStyle}>Close</Text>
+                    </TouchableHighlight>
+                  </View>
+                </View>
+              </Modal>
+            </View>
+
+
+
+
           </View>
           <View style={styles.footer}>
             <TouchableHighlight
@@ -369,4 +399,40 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 18,
   },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    marginTop: 22
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: "white",
+    borderRadius: 20,
+    padding: 35,
+    alignItems: "center",
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5
+  },
+  openButton: {
+    backgroundColor: "#F194FF",
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2
+  },
+  textStyle: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center"
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: "center"
+  }
 });

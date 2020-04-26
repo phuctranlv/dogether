@@ -5,7 +5,6 @@ import { ScrollView, Text, View, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import Task from './Task';
 import TaskModal from './TaskModal';
-import CollaborationRequestScreen from './CollaborationRequest';
 
 class PlanningScreen extends Component {
   constructor(props) {
@@ -17,15 +16,12 @@ class PlanningScreen extends Component {
     };
     this.openTask = this.openTask.bind(this);
     this.closeTask = this.closeTask.bind(this);
-    this.chooseCurrent = this.chooseCurrent.bind(this);
-    this.chooseShare = this.chooseShare.bind(this);
-    this.sendCollaborationRequest = this.sendCollaborationRequest.bind(this);
   }
 
   componentDidMount() {
     axios.get('http:localhost:3000/plans/tasks', {
       params: {
-        userId: '68018ace-810f-4285-8c8e-138ab6ff02dd'
+        userId: '7bc36916-ea7b-4d2e-8903-4a77e94d0d1b'
       }
     }).then((result) => {
       this.setState({
@@ -44,30 +40,8 @@ class PlanningScreen extends Component {
   closeTask() {
     this.setState({
       popupIsOpen: false,
-      chosenCurrent: 0,
-      chosenShare: null
     });
   }
-
-  chooseCurrent(current) {
-    this.setState({
-      chosenCurrent: current,
-    });
-  }
-
-  chooseShare(share) {
-    this.setState({
-      chosenShare: share,
-    });
-  }
-
-  sendCollaborationRequest() {
-    // Close popup
-    this.closeTask();
-    // Navigate away to Confirmation route
-    this.props.navigation.navigate('Collaboration Request')
-  }
-
   render() {
     if (this.state.tasks === undefined) {
       console.log('hello world!')
@@ -103,11 +77,6 @@ class PlanningScreen extends Component {
             task={this.state.task}
             isOpen={this.state.popupIsOpen}
             onClose={this.closeTask}
-            chosenCurrent={this.state.chosenCurrent}
-            chosenShare={this.state.chosenShare}
-            onChooseCurrent={this.chooseCurrent}
-            onChooseShare={this.chooseShare}
-            onClickingSendCollaborationRequest={this.sendCollaborationRequest}
           />
         </View>
       );

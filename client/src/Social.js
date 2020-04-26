@@ -4,8 +4,7 @@ import React, { Component } from 'react';
 import { ScrollView, Text, View, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import Friend from './Friend';
-import FriendModal from './FriendModal';
-import CollaborationRequestScreen from './CollaborationRequest';
+import ChatModal from './ChatModal';
 
 class SocialScreen extends Component {
   constructor(props) {
@@ -13,19 +12,20 @@ class SocialScreen extends Component {
     this.state = {
       friends: undefined,
       popupIsOpen: false,
-      friend: 'a friend'
+      friend: 'a friend',
+      conversations: undefined,
+      conversation: 'a conversation'
     };
-    this.openFriend = this.openFriend.bind(this);
-    this.closeFriend = this.closeFriend.bind(this);
+    this.openConversation = this.openConversation.bind(this);
+    this.closeConversation = this.closeConversation.bind(this);
     this.chooseCurrent = this.chooseCurrent.bind(this);
     this.chooseShare = this.chooseShare.bind(this);
-    this.sendCollaborationRequest = this.sendCollaborationRequest.bind(this);
   }
 
   componentDidMount() {
     axios.get('http:localhost:3000/social/friends', {
       params: {
-        userId: '19cd359e-b407-4747-8ce7-442a6e6085db'
+        userId: '7bc36916-ea7b-4d2e-8903-4a77e94d0d1b'
       }
     }).then((result) => {
       this.setState({
@@ -34,14 +34,16 @@ class SocialScreen extends Component {
     })
   }
 
-  openFriend(friend) {
+  openConversation(friend, conversation) {
+    // console.log(conversation);
     this.setState({
+      friend, friend,
       popupIsOpen: true,
-      friend: friend
+      conversation: conversation
     });
   }
 
-  closeFriend() {
+  closeConversation() {
     this.setState({
       popupIsOpen: false,
       chosenCurrent: 0,
@@ -61,19 +63,13 @@ class SocialScreen extends Component {
     });
   }
 
-  sendCollaborationRequest() {
-    // Close popup
-    this.closeFriend();
-    // Navigate away to Confirmation route
-    this.props.navigation.navigate('Collaboration Request')
-  }
-
   render() {
     if (this.state.friends === undefined) {
       console.log('hello world!')
       return (<></>)
     } else {
       return (
+        <>
         <View style={styles.container}>
           <Button
             title="Do! Dogether!"
@@ -92,24 +88,27 @@ class SocialScreen extends Component {
             {this.state.friends.map((friend, index) => {
               return (
                 <Friend
+                  userId={friend.userid}
                   friend={friend}
-                  onOpen={this.openFriend}
+                  onOpen={this.openConversation}
                   key={index}
                 />
               )
             })}
           </ScrollView>
-          <FriendModal
-            friend={this.state.friend}
-            isOpen={this.state.popupIsOpen}
-            onClose={this.closeFriend}
-            chosenCurrent={this.state.chosenCurrent}
-            chosenShare={this.state.chosenShare}
-            onChooseCurrent={this.chooseCurrent}
-            onChooseShare={this.chooseShare}
-            onClickingSendCollaborationRequest={this.sendCollaborationRequest}
-          />
+          
         </View>
+        <ChatModal
+        friend={this.state.friend}
+        conversation={this.state.conversation}
+        isOpen={this.state.popupIsOpen}
+        onClose={this.closeConversation}
+        chosenCurrent={this.state.chosenCurrent}
+        chosenShare={this.state.chosenShare}
+        onChooseCurrent={this.chooseCurrent}
+        onChooseShare={this.chooseShare}
+      />
+      </>
       );
     }
   }

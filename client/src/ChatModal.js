@@ -9,18 +9,19 @@ import {
   Text,
   TouchableHighlight,
   TouchableWithoutFeedback,
-  View
+  View,
 } from 'react-native';
 import defaultStyles from './styles';
 import Options from './Options';
-import CollaborationRequestScreen from './CollaborationRequest';
+import { ScrollView } from 'react-native-gesture-handler';
+import Chat from './Chat';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 // Set default popup height to 67% of screen height
 const defaultHeight = height * 0.67;
 
-export default class FriendModal extends Component {
+export default class ChatModal extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -176,10 +177,10 @@ export default class FriendModal extends Component {
           marginRight: 10,
         },
       movieContainer: this.state.expanded ? {
-        flexDirection: 'column',  // arrange image and friend info in a column
+        flexDirection: 'column',  // arrange image and conversation info in a column
         alignItems: 'center',     // and center them
       } : {
-          flexDirection: 'row',     // arrange image and friend info in a row
+          flexDirection: 'row',     // arrange image and conversation info in a row
         },
       movieInfo: this.state.expanded ? {
         flex: 0,
@@ -198,11 +199,11 @@ export default class FriendModal extends Component {
   render() {
     const {
       friend,
+      conversation,
       onChooseCurrent,
-      onChooseShare,
-      onClickingSendCollaborationRequest
+      onChooseShare
     } = this.props;
-    // Pull out friend data
+    // Pull out conversation data
     const { friendusername, title, friendavatar, current, share } = friend || {};
     const chosenCurrent = current === true ? 0 : null;
     const chosenShare = share === true ? 0 : null;
@@ -241,6 +242,13 @@ export default class FriendModal extends Component {
                 <Text style={[styles.friendusername, this.getStyles().friendusername]}>Username: {friendusername}</Text>
                 <Text style={styles.title}>Note: {title}</Text>
               </View>
+              <ScrollView>
+                {conversation.map((message, index) => {
+                  return (
+                    <Chat message={message} key={index}/>
+                  )
+                })}
+              </ScrollView>
             </View>
           </View>
         </Animated.View>

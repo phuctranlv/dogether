@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
 import {
   Dimensions,
   ScrollView,
@@ -16,7 +16,7 @@ export default class Options extends Component {
   }
 
   render() {
-    const { values, chosen, onChoose } = this.props;
+    const { values, chosen } = this.props;
     return (
       <View style={styles.container}>
         <ScrollView
@@ -39,7 +39,6 @@ export default class Options extends Component {
               <Option
                 value={value}
                 isChosen={index === chosen}
-                onChoose={() => onChoose(index)}
               />
             </View>
           )}
