@@ -4,7 +4,7 @@ import React, { Component } from 'react';
 import { ScrollView, Text, View, Button, StyleSheet } from 'react-native';
 import axios from 'axios';
 import Task from './Task';
-import TaskModal from './TaskModal';
+import { TaskModal } from './TaskModal';
 
 class PlanningScreen extends Component {
   constructor(props) {
@@ -38,6 +38,15 @@ class PlanningScreen extends Component {
   }
 
   closeTask() {
+    axios.get('http:localhost:3000/plans/tasks', {
+      params: {
+        userId: '7bc36916-ea7b-4d2e-8903-4a77e94d0d1b'
+      }
+    }).then((result) => {
+      this.setState({
+        tasks: result.data
+      })
+    });
     this.setState({
       popupIsOpen: false,
     });

@@ -77,11 +77,11 @@ model.tasks.getTasks = (req, cb) => {
 };
 
 model.tasks.postTask = (req, cb) => {
-  const queryForTasks = 'INSERT INTO tasks (taskid, task, note, current, share, userid, username) VALUES (?, ?, ?, ?, ?, ?, ?)';
-  const queryForSimilarTasks = 'INSERT INTO similartasks (taskid, task, note, current, share, userid, username) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const queryForTasks = 'INSERT INTO tasks (taskid, title, note, current, share, userid, username) VALUES (?, ?, ?, ?, ?, ?, ?)';
+  const queryForSimilarTasks = 'INSERT INTO similartasks (taskid, title, note, current, share, userid, username) VALUES (?, ?, ?, ?, ?, ?, ?)';
   const params = [
     faker.random.uuid(),
-    req.query.task,
+    req.query.title,
     req.query.note,
     req.query.current,
     req.query.share,
@@ -108,20 +108,21 @@ model.tasks.postTask = (req, cb) => {
 };
 
 model.tasks.updateTask = (req, cb) => {
+  // console.log(req.body.params)
   const query = `UPDATE tasks
-  SET task = ?,
+  SET title = ?,
     note = ?, 
     current = ?, 
     share = ?
   WHERE userid = ?
   AND taskid = ?`;
   const params = [
-    req.query.task,
-    req.query.note,
-    req.query.current,
-    req.query.share,
-    req.query.userId,
-    req.query.taskId,
+    req.body.params.title,
+    req.body.params.note,
+    req.body.params.current,
+    req.body.params.share,
+    req.body.params.userId,
+    req.body.params.taskId,
   ];
   client.execute(query, params, { prepare: true })
     .then((result) => {
@@ -149,8 +150,8 @@ model.tasks.deleteTask = (req, cb) => {
 };
 
 model.similarTasks.getPeopleWithSimilarTasks = (req, cb) => {
-  const query = 'SELECT * from similartasks WHERE task = ?';
-  const params = [req.query.task];
+  const query = 'SELECT * from similartasks WHERE title = ?';
+  const params = [req.query.title];
   client.execute(query, params, { prepare: true })
     .then((result) => {
       // console.log(JSON.parse(JSON.stringify(result.rows)));

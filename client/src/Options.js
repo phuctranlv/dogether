@@ -16,7 +16,7 @@ export default class Options extends Component {
   }
 
   render() {
-    const { values, chosen } = this.props;
+    const { values, chosen, onChosen } = this.props;
     return (
       <View style={styles.container}>
         <ScrollView
@@ -38,7 +38,8 @@ export default class Options extends Component {
             <View style={{ width: optionWith }} key={index}>
               <Option
                 value={value}
-                isChosen={index === chosen}
+                isChosen={chosen}
+                onChosen={onChosen}
               />
             </View>
           )}

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import {
   Animated,
   Dimensions,
@@ -14,35 +14,35 @@ import {
 } from 'react-native';
 import defaultStyles from './styles';
 import Options from './Options';
+import axios from 'axios';
 
 // Get screen dimensions
 const { width, height } = Dimensions.get('window');
 // Set default popup height to 67% of screen height
 const defaultHeight = height * 0.67;
 
-export default class TaskModal extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      // Animates slide ups and downs when popup open or closed
-      position: new Animated.Value(this.props.isOpen ? 0 : height),
-      // Backdrop opacity
-      opacity: new Animated.Value(0),
-      // Popup height that can be changed by pulling it up or down
-      height: defaultHeight,
-      // Expanded mode with bigger picture flag
-      expanded: false,
-      // Visibility flag
-      visible: this.props.isOpen,
-      modalVisible: false
-    };
-  }
+export const TaskModal = (props) => {
+  const [task, setTask] = useState(props.task)
+  const [position, setPosition] = useState(new Animated.Value(props.isOpen ? 0 : height));
+  const [opacity, setOpacity] = useState(new Animated.Value(0));
+  const [height, setHeight] = useState(defaultHeight);
+  const [expanded, setExpanded] = useState(false);
+  const [visible, setVisible] = useState(props.isOpen);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [chosenCurrent, setChosenCurrent] = useState(task.current);
+  const [chosenShare, setChosenShare] = useState(task.share);
+
+  useEffect(() => {
+    setChosenCurrent(task.current);
+    setChosenShare(task.share);
+  }, [task])
+
 
   // When user starts pulling popup previous height gets stored here
   // to help us calculate new height value during and after pulling
   _previousHeight = 0
 
-  UNSAFE_componentWillMount() {
+  useEffect(() => {
     // Initialize PanResponder to handle move gestures
     this._panResponder = PanResponder.create({
       onStartShouldSetPanResponder: (evt, gestureState) => true,
@@ -56,7 +56,7 @@ export default class TaskModal extends Component {
       },
       onPanResponderGrant: (evt, gestureState) => {
         // Store previous height before user changed it
-        this._previousHeight = this.state.height;
+        this._previousHeight = height;
       },
       onPanResponderMove: (evt, gestureState) => {
         // Pull delta and velocity values for y axis from gestureState
@@ -69,33 +69,31 @@ export default class TaskModal extends Component {
 
         // Switch to expanded mode if popup pulled up above 80% mark
         if (newHeight > height - height / 5) {
-          this.setState({ expanded: true });
+          setExpanded(true);
         } else {
-          this.setState({ expanded: false });
+          setExpanded(true);
         }
 
         // Expand to full height if pulled up rapidly
         if (vy < -0.75) {
-          this.setState({
-            expanded: true,
-            height: height
-          });
+          setExpanded(true);
+          setHeight(height);
         }
 
         // Close if pulled down rapidly
         else if (vy > 0.75) {
-          this.props.onClose();
+          props.onClose();
         }
         // Close if pulled below 75% mark of default height
         else if (newHeight < defaultHeight * 0.75) {
-          this.props.onClose();
+          props.onClose();
         }
         // Limit max height to screen height
         else if (newHeight > height) {
-          this.setState({ height: height });
+          setHeight(height);
         }
         else {
-          this.setState({ height: newHeight });
+          setHeight(newHeight);
         }
       },
       onPanResponderTerminationRequest: (evt, gestureState) => true,
@@ -105,11 +103,11 @@ export default class TaskModal extends Component {
 
         // Close if pulled below default height
         if (newHeight < defaultHeight) {
-          this.props.onClose();
+          props.onClose();
         }
 
         // Update previous height
-        this._previousHeight = this.state.height;
+        this._previousHeight = height;
       },
       onShouldBlockNativeResponder: (evt, gestureState) => {
         // Returns whether this component should block native components from becoming the JS
@@ -117,72 +115,83 @@ export default class TaskModal extends Component {
         return true;
       },
     });
-  }
+  }, [props.isOpen]);
 
   // Handle isOpen changes to either open or close popup
-  UNSAFE_componentWillReceiveProps(nextProps) {
-    // isOpen prop changed to true from false
-    if (!this.props.isOpen && nextProps.isOpen) {
-      this.animateOpen();
+  useEffect(() => {
+    if (props.isOpen) {
+      setVisible(true);
+      animateOpen();
+      setTask(props.task);
+    } else if (!props.isOpen) {
+      animateClose();
     }
-    // isOpen prop changed to false from true
-    else if (this.props.isOpen && !nextProps.isOpen) {
-      this.animateClose();
-    }
-  }
+  }, [props.isOpen])
+  // UNSAFE_componentWillReceiveProps = (nextProps) => {
+  //   // isOpen prop changed to true from false
+  //   if (!props.isOpen && nextProps.isOpen) {
+  //     this.animateOpen();
+  //   }
+  //   // isOpen prop changed to false from true
+  //   else if (props.isOpen && !nextProps.isOpen) {
+  //     this.animateClose();
+  //   }
+  // }
 
   // Open popup
-  animateOpen() {
-    // Update state first
-    this.setState({ visible: true }, () => {
-      Animated.parallel([
-        // Animate opacity
-        Animated.timing(
-          this.state.opacity, { toValue: 0.5, useNativeDriver: true } // semi-transparent
-        ),
-        // And slide up
-        Animated.timing(
-          this.state.position, { toValue: 0, useNativeDriver: true } // top of the screen
-        ),
-      ]).start();
-    });
-  }
 
-  // Close popup
-  animateClose() {
+  // Update state first
+
+  animateOpen = () => {
     Animated.parallel([
       // Animate opacity
       Animated.timing(
-        this.state.opacity, { toValue: 0, useNativeDriver: true } // transparent
+        opacity, { toValue: 0.5, useNativeDriver: true } // semi-transparent
+      ),
+      // And slide up
+      Animated.timing(
+        position, { toValue: 0, useNativeDriver: true } // top of the screen
+      ),
+    ]).start();
+  }
+
+  // useEffect(animateOpen, [visible]);
+
+  // Close popup
+  animateClose = () => {
+    Animated.parallel([
+      // Animate opacity
+      Animated.timing(
+        opacity, { toValue: 0, useNativeDriver: true } // transparent
       ),
       // Slide down
       Animated.timing(
-        this.state.position, { toValue: height, useNativeDriver: true } // bottom of the screen
+        position, { toValue: height, useNativeDriver: true } // bottom of the screen
       ),
-    ]).start(() => this.setState({
+    ]).start(() => {
       // Reset to default values
-      height: defaultHeight,
-      expanded: false,
-      visible: false,
-    }));
+      setHeight(defaultHeight);
+      setExpanded(false);
+      setVisible(false);
+    });
   }
 
   // Dynamic styles that depend on state
   getStyles = () => {
     return {
-      imageContainer: this.state.expanded ? {
+      imageContainer: expanded ? {
         width: width / 2,         // half of screen widtj
       } : {
           maxWidth: 110,            // limit width
           marginRight: 10,
         },
-      movieContainer: this.state.expanded ? {
+      movieContainer: expanded ? {
         flexDirection: 'column',  // arrange image and task info in a column
         alignItems: 'center',     // and center them
       } : {
           flexDirection: 'row',     // arrange image and task info in a row
         },
-      movieInfo: this.state.expanded ? {
+      movieInfo: expanded ? {
         flex: 0,
         alignItems: 'center',     // center horizontally
         paddingTop: 20,
@@ -190,148 +199,169 @@ export default class TaskModal extends Component {
           flex: 1,
           justifyContent: 'center', // center vertically
         },
-      title: this.state.expanded ? {
+      title: expanded ? {
         textAlign: 'center',
       } : {},
     };
   }
 
-  render() {
-    const {
-      task,
-      onClickingSendCollaborationRequest
-    } = this.props;
-    // Pull out task data
-    const { title, note, picture, current, share } = task || {};
-    const chosenCurrent = current === true ? 0 : null;
-    const chosenShare = share === true ? 0 : null;
-    // Render nothing if not visible
-    if (!this.state.visible) {
-      return null;
-    }
-    return (
-      <View style={styles.container}>
-        {/* Closes popup if user taps on semi-transparent backdrop */}
-        <TouchableWithoutFeedback onPress={this.props.onClose}>
-          <Animated.View style={[styles.backdrop, { opacity: this.state.opacity }]} />
-        </TouchableWithoutFeedback>
-        <Animated.View
-          style={[styles.modal, {
-            // Animates height
-            height: this.state.height,
-            // Animates position on the screen
-            transform: [{ translateY: this.state.position }, { translateX: 0 }]
-          }]}
-        >
-
-          {/* Content */}
-          <View style={styles.content}>
-            {/* Movie picture, title and note */}
-            <View
-              style={[styles.movieContainer, this.getStyles().movieContainer]}
-              {...this._panResponder.panHandlers}
-            >
-              {/* Poster */}
-              <View style={[styles.imageContainer, this.getStyles().imageContainer]}>
-                <Image source={{ uri: picture }} style={styles.image} />
-              </View>
-              {/* Title and note */}
-              <View style={[styles.movieInfo, this.getStyles().movieInfo]}>
-                <Text style={[styles.title, this.getStyles().title]}>Task: {title}</Text>
-                <Text style={styles.note}>Note: {note}</Text>
-              </View>
-            </View>
-
-            {/* Showtimes */}
-            <View>
-              {/* Day */}
-              <Text style={styles.sectionHeader}>Set current status</Text>
-              {/* TODO: Add day options here */}
-              <Options
-                values={`current`}
-                chosen={chosenCurrent}
-              />
-              {/* Time */}
-              <Text style={styles.sectionHeader}>Set share status</Text>
-              {/* TODO: Add show time options here */}
-              <Options
-                values={`share`}
-                chosen={chosenShare}
-              />
-            </View>
-
-          </View>
-
-          {/* Footer */}
-          <View style={styles.footer}>
-            <TouchableHighlight
-              underlayColor="#9575CD"
-              style={styles.buttonContainer}
-              onPress={() => {
-                if (chosenCurrent !== 0 | chosenShare !== 0) {
-                  alert('Current status and share status are required for collaboration');
-                } else {
-                  this.setState({ modalVisible: !this.state.modalVisible });
-                }
-              }}
-            >
-              <Text style={styles.button}>Send collaboration request</Text>
-            </TouchableHighlight>
-
-
-            <View style={styles.centeredView}>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={this.state.modalVisible}
-                onRequestClose={() => {
-                  Alert.alert("Modal has been closed.");
-                }}
-              >
-                <View style={styles.centeredView}>
-                  <View style={styles.modalView}>
-                    <View>
-                      <Text style={styles.modalText}>Your request has been sent. Happy dogether!</Text>
-                    </View>
-
-                    <TouchableHighlight
-                      style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
-                      onPress={() => {
-                        this.setState({ modalVisible: !this.state.modalVisible });
-                      }}
-                    >
-                      <Text style={styles.textStyle}>Close</Text>
-                    </TouchableHighlight>
-                  </View>
-                </View>
-              </Modal>
-            </View>
-
-
-
-
-          </View>
-          <View style={styles.footer}>
-            <TouchableHighlight
-              underlayColor="#9575CD"
-              style={styles.buttonContainer}
-              onPress={() => {
-                if (chosenCurrent !== 0 | chosenShare !== 0) {
-                  alert('Current status and share status are required for collaboration');
-                } else {
-                  onClickingSendCollaborationRequest();
-                }
-              }}
-            >
-              <Text style={styles.button}>Send collaboration request</Text>
-            </TouchableHighlight>
-          </View>
-
-        </Animated.View>
-      </View>
-    );
+  onChosenCurrent = () => {
+    axios.put('http://localhost:3000/plans/tasks', {
+      params: {
+        title: task.title,
+        note: task.note,
+        current: !chosenCurrent,
+        share: task.share,
+        userId: task.userid,
+        taskId: task.taskid
+      }
+    })
+      .then((result) => {
+        setChosenCurrent(!chosenCurrent);
+      })
+      .catch((error) => {
+        console.log(error);
+      })
   }
 
+  onChosenShare = () => {
+    axios.put('http://localhost:3000/plans/tasks', {
+      params: {
+        title: task.title,
+        note: task.note,
+        current: task.current,
+        share: !chosenShare,
+        userId: task.userid,
+        taskId: task.taskid
+      }
+    })
+      .then((result) => {
+        setChosenShare(!chosenShare)
+      })
+      .catch((error) => {
+        console.log(error);
+      })
+  }
+
+  // Pull out task data
+  const { title, note, picture, current, share } = task || {};
+  // Render nothing if not visible
+  if (!visible) {
+    return null;
+  }
+  return (
+    <View style={styles.container}>
+      {/* Closes popup if user taps on semi-transparent backdrop */}
+      <TouchableWithoutFeedback onPress={props.onClose}>
+        <Animated.View style={[styles.backdrop, { opacity: opacity }]} />
+      </TouchableWithoutFeedback>
+      <Animated.View
+        style={[styles.modal, {
+          // Animates height
+          height: height,
+          // Animates position on the screen
+          transform: [{ translateY: position }, { translateX: 0 }]
+        }]}
+      >
+
+        {/* Content */}
+        <View style={styles.content}>
+          {/* Movie picture, title and note */}
+          <View
+            style={[styles.movieContainer, this.getStyles().movieContainer]}
+            {...this._panResponder.panHandlers}
+          >
+            {/* Poster */}
+            <View style={[styles.imageContainer, this.getStyles().imageContainer]}>
+              <Image source={{ uri: picture }} style={styles.image} />
+            </View>
+            {/* Title and note */}
+            <View style={[styles.movieInfo, this.getStyles().movieInfo]}>
+              <Text style={[styles.title, this.getStyles().title]}>Task: {title}</Text>
+              <Text style={styles.note}>Note: {note}</Text>
+            </View>
+          </View>
+
+          {/* Showtimes */}
+          <View>
+            {/* Day */}
+            <Text style={styles.sectionHeader}>Set current status</Text>
+            {/* TODO: Add day options here */}
+            <Options
+              values={`current`}
+              chosen={chosenCurrent}
+              onChosen={onChosenCurrent}
+            />
+            {/* Time */}
+            <Text style={styles.sectionHeader}>Set share status</Text>
+            {/* TODO: Add show time options here */}
+            <Options
+              values={`share`}
+              chosen={chosenShare}
+              onChosen={onChosenShare}
+            />
+          </View>
+
+        </View>
+
+        {/* Footer */}
+        <View style={styles.footer}>
+          <TouchableHighlight
+            underlayColor="#9575CD"
+            style={styles.buttonContainer}
+            onPress={() => {
+              if (!chosenCurrent || !chosenShare) {
+                alert('Current status and share status are required for collaboration');
+              } else {
+                setModalVisible(!modalVisible);
+              }
+            }}
+          >
+            <Text style={styles.button}>Send collaboration request</Text>
+          </TouchableHighlight>
+
+
+          <View style={styles.centeredView}>
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={modalVisible}
+              onRequestClose={() => {
+                Alert.alert("Modal has been closed.");
+              }}
+            >
+              <View style={styles.centeredView}>
+                <View style={styles.modalView}>
+                  <View>
+                    <Text style={styles.modalText}>Your request has been sent. Happy dogether!</Text>
+                  </View>
+
+                  <TouchableHighlight
+                    style={{ ...styles.openButton, backgroundColor: "#2196F3" }}
+                    onPress={() => {
+                      setModalVisible(!modalVisible);
+                    }}
+                  >
+                    <Text style={styles.textStyle}>Close</Text>
+                  </TouchableHighlight>
+                </View>
+              </View>
+            </Modal>
+          </View>
+        </View>
+
+        <View style={styles.footer}>
+          <TouchableHighlight
+            underlayColor="#9575CD"
+            style={styles.buttonContainer}
+          >
+            <Text style={styles.button}>Hello</Text>
+          </TouchableHighlight>
+        </View>
+
+      </Animated.View>
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({

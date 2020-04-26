@@ -17,7 +17,7 @@ export default class Options extends Component {
     this.state = {
       // Animate background color change when value gets chosen
       background: new Animated.Value(0)
-    }
+    };
   }
 
 
@@ -54,7 +54,7 @@ export default class Options extends Component {
   }
 
   render() {
-    const { value, isChosen } = this.props;
+    const { value, isChosen, onChosen } = this.props;
     const backgroundColorAnimation = this.state.background.interpolate({
       inputRange: [0, 100],
       outputRange: [colorDefault, colorSelected],
@@ -62,6 +62,7 @@ export default class Options extends Component {
     return (
       <TouchableOpacity
         activeOpacity={1}
+        onPress={onChosen}
       >
         <Animated.View
           style={[styles.container, { backgroundColor: backgroundColorAnimation }]}
