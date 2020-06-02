@@ -21,7 +21,7 @@ class PlanningScreen extends Component {
   componentDidMount() {
     axios.get('http:localhost:3000/plans/tasks', {
       params: {
-        userId: '7bc36916-ea7b-4d2e-8903-4a77e94d0d1b'
+        userId: 'a68b657d-5ec5-4c5c-9900-b57c7edb2fb8'
       }
     }).then((result) => {
       this.setState({

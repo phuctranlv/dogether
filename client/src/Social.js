@@ -25,7 +25,7 @@ class SocialScreen extends Component {
   componentDidMount() {
     axios.get('http:localhost:3000/social/friends', {
       params: {
-        userId: '7bc36916-ea7b-4d2e-8903-4a77e94d0d1b'
+        userId: '5757b354-880a-423c-a763-f45d9c88c03b'
       }
     }).then((result) => {
       this.setState({
